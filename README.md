@@ -1,8 +1,8 @@
 # Getting Started
 
 ```
-git clone https://github.com/Vivify-Ideas/vivify-academy-react-blog-app.git
-cd vivify-academy-react-blog-app
+git clone git@github.com:drstvnvc/nk15-movies-app.git
+cd nk15-movies-app
 npm install
 npm start
 ```
