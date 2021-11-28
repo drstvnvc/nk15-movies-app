@@ -4,15 +4,15 @@ import {
   Route,
   Link,
   Redirect,
-  useHistory,
 } from "react-router-dom";
+import GuestRoute from "./components/shared/GuestRoute";
+import PrivateRoute from "./components/shared/PrivateRoute";
 import AddMovie from "./pages/AddMovie";
 import AppMovies from "./pages/AppMovies";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import SingleMovie from "./pages/SingleMovie";
-import authService from "./services/AuthService";
 
 function App() {
   const isAuthenticated = !!localStorage.getItem("token");
@@ -52,21 +52,21 @@ function App() {
           <Route exact path="/movies/:id">
             <SingleMovie />
           </Route>
-          <Route exact path="/add-movie">
+          <PrivateRoute exact path="/add-movie">
             <AddMovie />
-          </Route>
+          </PrivateRoute>
           <Route exact path="/edit/:id">
             <AddMovie />
           </Route>
-          <Route exact path="/register">
+          <GuestRoute exact path="/register">
             <Register />
-          </Route>
-          <Route exact path="/login">
+          </GuestRoute>
+          <GuestRoute exact path="/login">
             <Login />
-          </Route>
-          <Route exact path="/profile">
+          </GuestRoute>
+          <PrivateRoute exact path="/profile">
             <Profile />
-          </Route>
+          </PrivateRoute>
           <Route exact path="/">
             <Redirect to="/movies" />
           </Route>
