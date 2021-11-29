@@ -1,7 +1,12 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 
+import counterReducer from "./counter/slice";
+import activeUserReducer from "./activeUser/slice";
+
 const store = configureStore({
   reducer: combineReducers({
+    counter: counterReducer,
+    activeUser: activeUserReducer,
   }),
 });
 

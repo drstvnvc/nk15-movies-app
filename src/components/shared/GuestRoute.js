@@ -1,8 +1,10 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Route, Redirect } from "react-router-dom";
+import { selectIsAuthenticated } from "../../store/activeUser/selectors";
 
 export default function GuestRoute({ children, ...props }) {
-  const isAuthenticated = !!localStorage.getItem("token");
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   return (
     <Route {...props}>

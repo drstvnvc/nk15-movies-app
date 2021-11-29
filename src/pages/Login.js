@@ -1,25 +1,28 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import authService from "../services/AuthService";
+import { setActiveUser, setToken } from "../store/activeUser/slice";
 
 export default function Login() {
+  const dispatch = useDispatch();
+
   const [userData, setUserData] = useState({
     email: "",
     password: "",
   });
 
-  const history = useHistory();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const data = await authService.login(userData);
+    dispatch(setActiveUser(data.user));
+    dispatch(setToken(data.token));
 
     if (!data) {
       alert("Invalid credentials");
       return;
     }
-    history.push(`movies`);
   };
 
   return (

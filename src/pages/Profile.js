@@ -1,22 +1,17 @@
-import { useState, useEffect } from "react";
-import { useHistory } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
 import authService from "../services/AuthService";
+import { selectActiveUser } from "../store/activeUser/selectors";
+import { setActiveUser, setToken } from "../store/activeUser/slice";
 
 export default function Profile() {
-  const [user, setUser] = useState(null);
-  const history = useHistory();
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    async function fetchActiveUser() {
-      const activeUser = await authService.getMyProfile();
-      setUser(activeUser);
-    }
-    fetchActiveUser();
-  }, []);
+  const user = useSelector(selectActiveUser);
 
   async function handleLogout() {
     await authService.logout();
-    history.push("/login");
+    dispatch(setToken(null));
+    dispatch(setActiveUser(null));
   }
 
   return (

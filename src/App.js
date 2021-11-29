@@ -5,6 +5,7 @@ import {
   Link,
   Redirect,
 } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import GuestRoute from "./components/shared/GuestRoute";
 import PrivateRoute from "./components/shared/PrivateRoute";
 import AddMovie from "./pages/AddMovie";
@@ -13,12 +14,37 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import SingleMovie from "./pages/SingleMovie";
+import { increment } from "./store/counter/slice";
+import { useEffect, useState } from "react";
+import { selectCounterValue } from "./store/counter/selectors";
+import { selectIsAuthenticated } from "./store/activeUser/selectors";
+import authService from "./services/AuthService";
+import { setActiveUser } from "./store/activeUser/slice";
 
 function App() {
-  const isAuthenticated = !!localStorage.getItem("token");
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
+  const dispatch = useDispatch();
+
+  const counterValue = useSelector(selectCounterValue);
+
+  useEffect(() => {
+    async function fetchActiveUser() {
+      const activeUser = await authService.getMyProfile();
+      dispatch(setActiveUser(activeUser));
+    }
+
+    if (isAuthenticated) {
+      fetchActiveUser();
+    }
+  }, []);
+
+  function incrementCounter() {
+    dispatch(increment());
+  }
   return (
     <div className="App">
+      <h1 onClick={incrementCounter}>COUNTER VALUE: {counterValue}</h1>
       <Router>
         <nav>
           <ul>

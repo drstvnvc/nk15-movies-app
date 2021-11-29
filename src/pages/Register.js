@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import authService from "../services/AuthService";
+import { setActiveUser, setToken } from "../store/activeUser/slice";
 
 export default function Register() {
+  const dispatch = useDispatch();
   const [userData, setUserData] = useState({
     name: "",
     email: "",
@@ -10,18 +12,16 @@ export default function Register() {
     password_confirmation: "",
   });
 
-  const history = useHistory();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const data = await authService.register(userData);
-
+    dispatch(setActiveUser(data.user));
+    dispatch(setToken(data.token));
     if (!data) {
       alert("Registration failed");
       return;
     }
-    history.push(`movies`);
   };
 
   return (
