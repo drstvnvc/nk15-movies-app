@@ -1,44 +1,29 @@
 import HttpService from "./HttpService";
 
 class AuthService extends HttpService {
+  constructor() {
+    super();
+    this.login = this.login.bind(this);
+  }
+
   async login(credentials) {
-    try {
-      const { data } = await this.client.post("/auth/login", credentials);
-      localStorage.setItem("token", data.token);
-
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
+    const { data } = await this.client.post("/auth/login", credentials);
+    return data;
   }
 
-  async register(userData) {
-    try {
-      const { data } = await this.client.post("/auth/register", userData);
-      localStorage.setItem("token", data.token);
+  register = async (userData) => {
+    const { data } = await this.client.post("/auth/register", userData);
+    return data;
+  };
 
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  getMyProfile = async () => {
+    const { data } = await this.client.get("/auth/me");
+    return data;
+  };
 
-  async getMyProfile() {
-    try {
-      const { data } = await this.client.get("/auth/me");
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  async logout() {
-    try {
-      await this.client.post("/auth/logout");
-      localStorage.removeItem("token");
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  logout = async () => {
+    await this.client.post("/auth/logout");
+  };
 }
 
 const authService = new AuthService();

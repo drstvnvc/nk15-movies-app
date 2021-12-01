@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import authService from "../services/AuthService";
-import { setActiveUser, setToken } from "../store/activeUser/slice";
+import { register } from "../store/activeUser/slice";
 
 export default function Register() {
   const dispatch = useDispatch();
@@ -14,14 +13,7 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const data = await authService.register(userData);
-    dispatch(setActiveUser(data.user));
-    dispatch(setToken(data.token));
-    if (!data) {
-      alert("Registration failed");
-      return;
-    }
+    dispatch(register(userData));
   };
 
   return (

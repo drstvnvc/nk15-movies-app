@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
-import authService from "../services/AuthService";
-import { setActiveUser, setToken } from "../store/activeUser/slice";
+import { login } from "../store/activeUser/slice";
 
 export default function Login() {
   const dispatch = useDispatch();
 
-  const [userData, setUserData] = useState({
+  const [credentials, setCredentials] = useState({
     email: "",
     password: "",
   });
@@ -15,14 +13,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = await authService.login(userData);
-    dispatch(setActiveUser(data.user));
-    dispatch(setToken(data.token));
-
-    if (!data) {
-      alert("Invalid credentials");
-      return;
-    }
+    dispatch(login(credentials));
   };
 
   return (
@@ -34,19 +25,19 @@ export default function Login() {
       >
         <input
           required
-          value={userData.email}
+          value={credentials.email}
           placeholder="Email"
           onChange={({ target }) =>
-            setUserData({ ...userData, email: target.value })
+            setCredentials({ ...credentials, email: target.value })
           }
         />
         <input
           required
           type="password"
-          value={userData.password}
+          value={credentials.password}
           placeholder="Password"
           onChange={({ target }) =>
-            setUserData({ ...userData, password: target.value })
+            setCredentials({ ...credentials, password: target.value })
           }
         />
 

@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import authService from "../services/AuthService";
 import { selectActiveUser } from "../store/activeUser/selectors";
-import { setActiveUser, setToken } from "../store/activeUser/slice";
+import { logout } from "../store/activeUser/slice";
 
 export default function Profile() {
   const dispatch = useDispatch();
@@ -9,9 +8,7 @@ export default function Profile() {
   const user = useSelector(selectActiveUser);
 
   async function handleLogout() {
-    await authService.logout();
-    dispatch(setToken(null));
-    dispatch(setActiveUser(null));
+    dispatch(logout());
   }
 
   return (

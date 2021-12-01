@@ -1,14 +1,32 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import createSagaMiddleware from "redux-saga";
 
 import counterReducer from "./counter/slice";
 import activeUserReducer from "./activeUser/slice";
 
+import * as activeUserSagas from "./activeUser/sagas";
+
+const reducers = {
+  counter: counterReducer,
+  activeUser: activeUserReducer,
+};
+
+const sagaMiddleware = createSagaMiddleware();
+
 const store = configureStore({
-  reducer: combineReducers({
-    counter: counterReducer,
-    activeUser: activeUserReducer,
-  }),
+  reducer: combineReducers(reducers),
+  middleware: (getDefaultMiddleware) => [
+    ...getDefaultMiddleware({
+      thunk: false,
+    }),
+    sagaMiddleware,
+  ],
 });
+
+for (let saga in activeUserSagas) {
+  sagaMiddleware.run(activeUserSagas[saga]);
+  
+}
 
 export default store;
 

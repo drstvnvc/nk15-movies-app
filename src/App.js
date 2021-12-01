@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 import { selectCounterValue } from "./store/counter/selectors";
 import { selectIsAuthenticated } from "./store/activeUser/selectors";
 import authService from "./services/AuthService";
-import { setActiveUser } from "./store/activeUser/slice";
+import { getActiveUser, setActiveUser } from "./store/activeUser/slice";
 
 function App() {
   const isAuthenticated = useSelector(selectIsAuthenticated);
@@ -29,13 +29,8 @@ function App() {
   const counterValue = useSelector(selectCounterValue);
 
   useEffect(() => {
-    async function fetchActiveUser() {
-      const activeUser = await authService.getMyProfile();
-      dispatch(setActiveUser(activeUser));
-    }
-
     if (isAuthenticated) {
-      fetchActiveUser();
+      dispatch(getActiveUser());
     }
   }, []);
 
