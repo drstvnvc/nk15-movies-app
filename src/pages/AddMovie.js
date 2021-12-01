@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import movieService from "../services/MovieService";
+import { selectActiveMovie } from "../store/movies/selectors";
+import { createMovie, editMovie, setActiveMovie } from "../store/movies/slice";
 
 export default function AddMovie() {
+  const dispatch = useDispatch();
+
   const [movieData, setMovieData] = useState({
     title: "",
     director: "",
@@ -15,21 +20,35 @@ export default function AddMovie() {
   const history = useHistory();
   const { id } = useParams();
 
+  const activeMovie = useSelector(selectActiveMovie);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let data = null;
 
-    if (id) {
-      data = await movieService.edit(id, movieData);
-      history.push("/movies");
+    if (activeMovie) {
+      dispatch(
+        editMovie({
+          id: activeMovie.id,
+          data: movieData,
+          meta: {
+            onSuccess: () => {
+              history.push(`movies/${activeMovie.id}`);
+            },
+          },
+        })
+      );
     } else {
-      data = await movieService.add(movieData);
-      history.push(`movies/${data.id}`);
-    }
-
-    if (!data) {
-      alert("The new movie is not created");
-      return;
+      dispatch(
+        createMovie({
+          data: movieData,
+          meta: {
+            onSuccess: (data) => {
+              history.push(`movies/${data.id}`);
+            },
+          },
+        })
+      );
+      history.push("movies");
     }
   };
 
@@ -45,16 +64,17 @@ export default function AddMovie() {
   };
 
   useEffect(() => {
-    const fetchMovie = async () => {
-      const { id: _, created_at, ...restData } = await movieService.get(id);
-
-      setMovieData(restData);
-    };
-
     if (id) {
-      fetchMovie();
+      dispatch(setActiveMovie(id));
     }
   }, [id]);
+
+  useEffect(() => {
+    if (activeMovie) {
+      const { id: _, created_at, ...restData } = activeMovie;
+      setMovieData(restData);
+    }
+  }, [activeMovie]);
 
   return (
     <div>

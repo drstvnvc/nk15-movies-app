@@ -1,65 +1,30 @@
 import HttpService from "./HttpService";
 
 class MovieService extends HttpService {
-  async getAll() {
-    try {
-      const { data } = await this.client.get("movies");
+  getAll = async () => {
+    const { data } = await this.client.get("movies");
+    return data;
+  };
 
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
+  get = async (id) => {
+    const { data } = await this.client.get(`movies/${id}`);
+    return data;
+  };
 
-    return [];
-  }
+  add = async (newMovie) => {
+    const { data } = await this.client.post("movies", newMovie);
+    return data;
+  };
 
-  async get(id) {
-    try {
-      const { data } = await this.client.get(`movies/${id}`);
+  edit = async (id, movie) => {
+    const { data } = await this.client.put(`movies/${id}`, movie);
+    return data;
+  };
 
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
-
-    return null;
-  }
-
-  async add(newMovie) {
-    try {
-      const { data } = await this.client.post("movies", newMovie);
-
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
-
-    return null;
-  }
-
-  async edit(id, movie) {
-    try {
-      const { data } = await this.client.put(`movies/${id}`, movie);
-
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
-
-    return null;
-  }
-
-  async delete(id) {
-    try {
-      const { data } = await this.client.delete(`movies/${id}`);
-
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
-
-    return null;
-  }
+  delete = async (id) => {
+    const { data } = await this.client.delete(`movies/${id}`);
+    return data;
+  };
 }
 
 const movieService = new MovieService();

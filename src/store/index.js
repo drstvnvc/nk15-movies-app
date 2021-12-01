@@ -3,12 +3,14 @@ import createSagaMiddleware from "redux-saga";
 
 import counterReducer from "./counter/slice";
 import activeUserReducer from "./activeUser/slice";
+import moviesReducer from "./movies/slice";
 
-import * as activeUserSagas from "./activeUser/sagas";
+import sagas from "./sagas";
 
 const reducers = {
   counter: counterReducer,
   activeUser: activeUserReducer,
+  movies: moviesReducer,
 };
 
 const sagaMiddleware = createSagaMiddleware();
@@ -23,9 +25,8 @@ const store = configureStore({
   ],
 });
 
-for (let saga in activeUserSagas) {
-  sagaMiddleware.run(activeUserSagas[saga]);
-  
+for (let saga in sagas) {
+  sagaMiddleware.run(sagas[saga]);
 }
 
 export default store;
